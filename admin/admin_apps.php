@@ -1129,7 +1129,11 @@ function extractBudgetRowsFromResolved(resolved){
   if(!Array.isArray(resolved)) return null;
   for(const row of resolved){
     const rowType = String(row?.type || "").toLowerCase();
+<<<<<<< codex/improve-grants-management-for-users-and-admins-2ew208
     if(!row || (!rowType.includes("budget") && rowType !== "budget_table")) continue;
+=======
+    if(!row || rowType !== "budget_table") continue;
+>>>>>>> main
     const val = parseJsonMaybe(row.value);
     const rows = rowsFromBudgetValue(val);
     if(rows) return rows;
