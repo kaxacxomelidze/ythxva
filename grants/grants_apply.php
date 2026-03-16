@@ -958,8 +958,11 @@ function buildSubmissionMeta(applicant){
   }));
 
   const fieldLabels = {};
+  const fieldTypes = {};
   fields.forEach(f => {
-    fieldLabels["field_" + f.id] = String(f.label || '');
+    const key = "field_" + f.id;
+    fieldLabels[key] = String(f.label || '');
+    fieldTypes[key] = String(f.type || 'text').toLowerCase();
   });
 
   return {
@@ -971,6 +974,7 @@ function buildSubmissionMeta(applicant){
     applicant_email: applicant.email || '',
     applicant_phone: applicant.phone || '',
     field_labels: fieldLabels,
+    field_types: fieldTypes,
     requirements: reqs.map(r => ({
       id: String(r.id),
       name: String(r.name || ''),

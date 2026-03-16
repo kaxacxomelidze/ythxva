@@ -1192,14 +1192,18 @@ try {
     $grant_id = (int)($json['grant_id'] ?? 0);
     if ($grant_id <= 0) json_err('grant_id არასწორია');
 
-    $stF = $pdo->prepare("SELECT id,label FROM grant_fields WHERE grant_id=?");
+    $stF = $pdo->prepare("SELECT id,label,type FROM grant_fields WHERE grant_id=?");
     $stF->execute([$grant_id]);
     $map = [];
+    $fields = [];
     foreach ($stF->fetchAll(PDO::FETCH_ASSOC) as $r) {
       $key = 'field_' . (int)$r['id'];
-      $map[$key] = (string)($r['label'] ?? '');
+      $label = (string)($r['label'] ?? '');
+      $type = (string)($r['type'] ?? 'text');
+      $map[$key] = $label;
+      $fields[$key] = ['label' => $label, 'type' => $type];
     }
-    json_ok(['map' => $map]);
+    json_ok(['map' => $map, 'fields' => $fields]);
   }
 
   if ($action === 'app_update_meta') {

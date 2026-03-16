@@ -657,6 +657,7 @@ let ACTIVE_APP_ID = 0;
 
 /* cache field labels per grant */
 const FIELD_LABELS = new Map(); // grant_id -> { field_89: "სახელი", ... }
+const FIELD_TYPES  = new Map(); // grant_id -> { field_89: "text"|"budget_table"|... }
 function looksLikeFieldKey(k){
   const s = String(k || "");
   return /^field_\d+$/i.test(s) || /^f_\d+$/i.test(s) || /^\d+$/.test(s);
@@ -703,13 +704,22 @@ function getSubmissionMeta(formData){
 async function ensureFieldLabels(grantId){
   grantId = Number(grantId || 0);
   if(!grantId) return;
-  if(FIELD_LABELS.has(grantId)) return;
+  if(FIELD_LABELS.has(grantId) && FIELD_TYPES.has(grantId)) return;
   try{
     const j = await api("grant_fields_map", {grant_id: grantId});
     FIELD_LABELS.set(grantId, j.map || {});
+
+    const types = {};
+    const fields = (j && typeof j.fields === "object" && j.fields) ? j.fields : {};
+    for(const [k,v] of Object.entries(fields)){
+      const nk = normalizeFieldKey(k);
+      types[nk] = String(v?.type || "").toLowerCase();
+    }
+    FIELD_TYPES.set(grantId, types);
   }catch(e){
     console.warn("No fields map:", e?.message);
     FIELD_LABELS.set(grantId, {});
+    FIELD_TYPES.set(grantId, {});
   }
 }
 
@@ -995,8 +1005,31 @@ function looksLikeBudgetValue(v){
   return false;
 }
 
+function isBudgetFieldType(t){
+  const s = String(t || "").toLowerCase();
+  return s === "budget_table" || s === "budget" || s.includes("budget");
+}
+
+function fieldTypeForKey(grantId, key){
+  const map = FIELD_TYPES.get(Number(grantId)) || {};
+  return String(map[normalizeFieldKey(key)] || "").toLowerCase();
+}
+
+function rowsFromBudgetValue(v){
+  const pv = parseJsonMaybe(v);
+  if(!pv) return null;
+
+  if(Array.isArray(pv) && pv.some(x => looksLikeBudgetRow(parseJsonMaybe(x)))) return pv;
+  if(typeof pv === "object"){
+    if(Array.isArray(pv.rows) && pv.rows.some(x => looksLikeBudgetRow(parseJsonMaybe(x)))) return pv.rows;
+    if(looksLikeBudgetRow(pv)) return [pv];
+  }
+
+  return null;
+}
+
 /* ✅ NEW: deep search that also checks "field_*" values JSON */
-function deepFindBudgetRows(obj, depth=0){
+function deepFindBudgetRows(obj, depth=0, grantId=0){
   if(depth > 7) return null;
   obj = parseJsonMaybe(obj);
   if(!obj) return null;
@@ -1005,7 +1038,7 @@ function deepFindBudgetRows(obj, depth=0){
   if(Array.isArray(obj)){
     if(obj.some(x => looksLikeBudgetRow(parseJsonMaybe(x)))) return obj;
     for(const v of obj){
-      const r = deepFindBudgetRows(v, depth+1);
+      const r = deepFindBudgetRows(v, depth+1, grantId);
       if(r) return r;
     }
     return null;
@@ -1023,15 +1056,15 @@ function deepFindBudgetRows(obj, depth=0){
   // case: object has rows itself
   if(Array.isArray(obj.rows) && obj.rows.some(x => looksLikeBudgetRow(parseJsonMaybe(x)))) return obj.rows;
 
-  // ✅ case: field_123 contains {"rows":[...]} or rows array
+  // ✅ case: field_123 can be budget by type OR by key hints
   for(const [k,v] of Object.entries(obj)){
     const kk = String(k).toLowerCase();
-    if(kk.startsWith("field_") || kk.startsWith("f_") || kk.includes("budget") || kk.includes("ბიუჯ")){
-      const pv = parseJsonMaybe(v);
-      if(looksLikeBudgetValue(pv)){
-        if(Array.isArray(pv)) return pv;
-        if(pv && typeof pv === "object" && Array.isArray(pv.rows)) return pv.rows;
-      }
+    const isFieldKey = kk.startsWith("field_") || kk.startsWith("f_") || /^\d+$/.test(kk);
+    const typedBudget = isFieldKey && isBudgetFieldType(fieldTypeForKey(grantId, kk));
+
+    if(typedBudget || kk.includes("budget") || kk.includes("ბიუჯ") || isFieldKey){
+      const rows = rowsFromBudgetValue(v);
+      if(rows) return rows;
     }
   }
 
@@ -1039,12 +1072,12 @@ function deepFindBudgetRows(obj, depth=0){
   for(const [k,v] of Object.entries(obj)){
     const kk = String(k).toLowerCase();
     if(kk.includes("budget") || kk.includes("ბიუჯ")){
-      const r = deepFindBudgetRows(v, depth+1);
+      const r = deepFindBudgetRows(v, depth+1, grantId);
       if(r) return r;
     }
   }
   for(const v of Object.values(obj)){
-    const r = deepFindBudgetRows(v, depth+1);
+    const r = deepFindBudgetRows(v, depth+1, grantId);
     if(r) return r;
   }
 
@@ -1059,7 +1092,7 @@ function showBudgetInModal(formData, rowsHint=null){
   if(!wrap || !body || !totalEl) return;
 
   // ✅ prefer rowsHint (from resolved); fallback deep search in raw formData
-  const rows = Array.isArray(rowsHint) ? rowsHint : deepFindBudgetRows(formData);
+  const rows = Array.isArray(rowsHint) ? rowsHint : deepFindBudgetRows(formData, 0, Number(window.__activeGrantIdForBudget || 0));
 
   if(!rows){
     wrap.style.display = "none";
@@ -1096,10 +1129,14 @@ function extractBudgetRowsFromResolved(resolved){
   if(!Array.isArray(resolved)) return null;
   for(const row of resolved){
     const rowType = String(row?.type || "").toLowerCase();
+<<<<<<< codex/improve-grants-management-for-users-and-admins-2ew208
+    if(!row || (!rowType.includes("budget") && rowType !== "budget_table")) continue;
+=======
     if(!row || rowType !== "budget_table") continue;
+>>>>>>> main
     const val = parseJsonMaybe(row.value);
-    if(val && typeof val === "object" && Array.isArray(val.rows) && val.rows.some(x=>looksLikeBudgetRow(parseJsonMaybe(x)))) return val.rows;
-    if(Array.isArray(val) && val.some(x=>looksLikeBudgetRow(parseJsonMaybe(x)))) return val;
+    const rows = rowsFromBudgetValue(val);
+    if(rows) return rows;
   }
   return null;
 }
@@ -1447,7 +1484,11 @@ async function openApp(id, grantIdHint=0){
     if(meta && meta.field_labels){
       FIELD_LABELS.set(Number(a.grant_id || 0), meta.field_labels);
     }
+    if(meta && meta.field_types && typeof meta.field_types === "object"){
+      FIELD_TYPES.set(Number(a.grant_id || 0), meta.field_types);
+    }
 
+    window.__activeGrantIdForBudget = Number(a.grant_id || 0);
     renderApplicantTypePill(fd);
     renderPretty(fd, a);
     renderUploads(a.uploads || [], fd, Number(a.grant_id || 0));
