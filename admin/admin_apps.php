@@ -971,19 +971,26 @@ function normalizeBudgetRow(rowObj){
   const desc = descKey ? String(rowObj[descKey] ?? "").trim() : "";
 
   const extras = [];
+  let hasContent = false;
   for(const k of keys){
     if(k === amountKey || k === catKey || k === descKey) continue;
     const v = rowObj[k];
     if(v === null || v === undefined) continue;
     const txt = (typeof v === "string") ? v.trim() : (typeof v === "object" ? JSON.stringify(v) : String(v));
     if(!txt) continue;
+    hasContent = true;
     extras.push(`${k}: ${txt}`);
   }
+
+  if(cat) hasContent = true;
+  if(desc) hasContent = true;
+  if(amountKey) hasContent = true;
 
   return {
     cat,
     desc: desc || extras.join(" • "),
     amount: Number.isFinite(amount) ? amount : 0,
+    hasContent,
   };
 }
 
@@ -1019,10 +1026,10 @@ function rowsFromBudgetValue(v){
   const pv = parseJsonMaybe(v);
   if(!pv) return null;
 
-  if(Array.isArray(pv) && pv.some(x => looksLikeBudgetRow(parseJsonMaybe(x)))) return pv;
+  if(Array.isArray(pv) && pv.some(x => normalizeBudgetRow(x)?.hasContent)) return pv;
   if(typeof pv === "object"){
-    if(Array.isArray(pv.rows) && pv.rows.some(x => looksLikeBudgetRow(parseJsonMaybe(x)))) return pv.rows;
-    if(looksLikeBudgetRow(pv)) return [pv];
+    if(Array.isArray(pv.rows) && pv.rows.some(x => normalizeBudgetRow(x)?.hasContent)) return pv.rows;
+    if(normalizeBudgetRow(pv)?.hasContent) return [pv];
   }
 
   return null;
@@ -1062,7 +1069,7 @@ function deepFindBudgetRows(obj, depth=0, grantId=0){
     const isFieldKey = kk.startsWith("field_") || kk.startsWith("f_") || /^\d+$/.test(kk);
     const typedBudget = isFieldKey && isBudgetFieldType(fieldTypeForKey(grantId, kk));
 
-    if(typedBudget || kk.includes("budget") || kk.includes("ბიუჯ") || isFieldKey){
+    if(typedBudget || kk.includes("budget") || kk.includes("ბიუჯ")){
       const rows = rowsFromBudgetValue(v);
       if(rows) return rows;
     }
@@ -1104,7 +1111,7 @@ function showBudgetInModal(formData, rowsHint=null){
 
   const norm = rows
     .map(r => normalizeBudgetRow(r))
-    .filter(r => r && (r.cat || r.desc || Number(r.amount||0) > 0));
+    .filter(r => r && r.hasContent);
 
   const total = norm.reduce((s,r)=>s + Number(r.amount||0), 0);
 
@@ -1129,11 +1136,7 @@ function extractBudgetRowsFromResolved(resolved){
   if(!Array.isArray(resolved)) return null;
   for(const row of resolved){
     const rowType = String(row?.type || "").toLowerCase();
-<<<<<<< codex/improve-grants-management-for-users-and-admins-2ew208
     if(!row || (!rowType.includes("budget") && rowType !== "budget_table")) continue;
-=======
-    if(!row || rowType !== "budget_table") continue;
->>>>>>> main
     const val = parseJsonMaybe(row.value);
     const rows = rowsFromBudgetValue(val);
     if(rows) return rows;
@@ -1170,8 +1173,9 @@ function flattenObject(obj, prefix="", out=[]){
     for(const [k,v] of Object.entries(obj)){
       if(String(k) === "__meta") continue;
       const key = prefix ? `${prefix}.${k}` : k;
-      if(v && typeof v === "object"){
-        flattenObject(v, key, out);
+      const pv = parseJsonMaybe(v);
+      if(pv && typeof pv === "object"){
+        flattenObject(pv, key, out);
       }else{
         out.push([key, valToText(v)]);
       }
