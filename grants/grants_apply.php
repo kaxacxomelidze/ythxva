@@ -165,6 +165,10 @@ $payload = [
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><?= h((string)$grant['title']) ?> • Grant Portal</title>
 
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/youthagency/assets.css?v=1">
+
   <style>
     :root{
       --bg:#0b1220; --panel:#0f172a; --card:#111827; --line:#22314a;
@@ -172,7 +176,7 @@ $payload = [
       --warn:#f59e0b; --bad:#dc2626; --radius:14px;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Arial;background:var(--bg);color:var(--text)}
+    body{margin:0;font-family:'Noto Sans Georgian',system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
     a{color:inherit;text-decoration:none}
     .wrap{max-width:1160px;margin:0 auto;padding:18px}
     .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
@@ -252,6 +256,8 @@ $payload = [
 </head>
 
 <body>
+  <div id="siteHeaderMount"></div>
+
   <div class="wrap">
     <div class="banner">
       <div>
@@ -1367,20 +1373,29 @@ function bindFields(activeDbStep, fields, idx, isFiles){
   </script>
 
   <script>
-    async function injectFooter() {
-      const el = document.getElementById('siteFooterMount');
+    async function inject(id, file) {
+      const el = document.getElementById(id);
       if (!el) return;
-      const res = await fetch('/youthagency/footer.html?v=2');
-      if (res.ok) el.innerHTML = await res.text();
+      const res = await fetch(file + (file.includes('?') ? '&' : '?') + 'v=2');
+      if (!res.ok) return;
+      el.innerHTML = await res.text();
     }
+
+    async function loadScript(src) {
+      return new Promise((resolve) => {
+        const s = document.createElement('script');
+        s.src = src + (src.includes('?') ? '&' : '?') + 'v=2';
+        s.onload = resolve;
+        s.onerror = resolve;
+        document.body.appendChild(s);
+      });
+    }
+
     (async () => {
-      const s = document.createElement('script');
-      s.src = '/youthagency/app.js?v=2';
-      s.onload = () => {
-        if (typeof window.initHeader === 'function') window.initHeader();
-      };
-      document.body.appendChild(s);
-      await injectFooter();
+      await inject('siteHeaderMount', '/youthagency/header.html');
+      await loadScript('/youthagency/app.js');
+      if (typeof window.initHeader === 'function') window.initHeader();
+      await inject('siteFooterMount', '/youthagency/footer.html');
     })();
   </script>
 </body>
