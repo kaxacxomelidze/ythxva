@@ -1153,8 +1153,14 @@ try {
     $fdResolved = [];
     foreach ($fd as $k => $v) {
       $key = (string)$k;
-      if (isset($fieldMap[$key])) {
-        $fdResolved[] = ['key'=>$key,'label'=>$fieldMap[$key]['label'],'type'=>$fieldMap[$key]['type'],'value'=>$v];
+      $normKey = $key;
+      if (!isset($fieldMap[$normKey])) {
+        if (preg_match('/^f_(\d+)$/i', $key, $m)) $normKey = 'field_' . (int)$m[1];
+        elseif (preg_match('/^(\d+)$/', $key, $m)) $normKey = 'field_' . (int)$m[1];
+      }
+
+      if (isset($fieldMap[$normKey])) {
+        $fdResolved[] = ['key'=>$key,'label'=>$fieldMap[$normKey]['label'],'type'=>$fieldMap[$normKey]['type'],'value'=>$v];
       } else {
         $fdResolved[] = ['key'=>$key,'label'=>$key,'type'=>'raw','value'=>$v];
       }
@@ -1163,13 +1169,19 @@ try {
     $budget_payloads = [];
     foreach ($fd as $k => $v) {
       $key = (string)$k;
-      if (!isset($fieldMap[$key])) continue;
-      $t = strtolower((string)($fieldMap[$key]['type'] ?? ''));
+      $normKey = $key;
+      if (!isset($fieldMap[$normKey])) {
+        if (preg_match('/^f_(\d+)$/i', $key, $m)) $normKey = 'field_' . (int)$m[1];
+        elseif (preg_match('/^(\d+)$/', $key, $m)) $normKey = 'field_' . (int)$m[1];
+      }
+
+      if (!isset($fieldMap[$normKey])) continue;
+      $t = strtolower((string)($fieldMap[$normKey]['type'] ?? ''));
       if ($t !== 'budget_table' && strpos($t, 'budget') === false) continue;
       $budget_payloads[] = [
         'key' => $key,
-        'label' => (string)($fieldMap[$key]['label'] ?? $key),
-        'type' => (string)($fieldMap[$key]['type'] ?? 'budget_table'),
+        'label' => (string)($fieldMap[$normKey]['label'] ?? $key),
+        'type' => (string)($fieldMap[$normKey]['type'] ?? 'budget_table'),
         'value' => $v,
       ];
     }
