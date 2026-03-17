@@ -9,6 +9,9 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 require_once __DIR__ . '/config.php';
 require_login();
 
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+
 $pdo = db();
 
 if (empty($_SESSION['csrf'])) {
