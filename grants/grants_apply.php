@@ -1002,6 +1002,45 @@ function budgetPayloadForField(field){
   };
 }
 
+function syncVisibleDomToState(){
+  document.querySelectorAll("[data-field]").forEach(el=>{
+    const k = el.getAttribute("data-field");
+    if(!k) return;
+    state.form_data[k] = el.value ?? "";
+  });
+
+  const groups = new Set(Array.from(document.querySelectorAll("[data-group]"))
+    .map(el => String(el.getAttribute("data-group") || "").trim())
+    .filter(Boolean));
+
+  groups.forEach(k=>{
+    const list = Array.from(document.querySelectorAll(`input[data-group="${k}"]`));
+    const isRadio = list.some(x => x.type === "radio");
+    if(isRadio){
+      const chosen = list.find(x => x.checked);
+      state.form_data[k] = chosen ? chosen.value : "";
+    }else{
+      state.form_data[k] = list.filter(x => x.checked).map(x => x.value);
+    }
+  });
+
+  const budgetInputs = Array.from(document.querySelectorAll("[data-brow][data-bkey]"));
+  if(budgetInputs.length){
+    budgetInputs.forEach(inp=>{
+      const i = Number(inp.getAttribute("data-brow"));
+      const k = String(inp.getAttribute("data-bkey") || "");
+      if(!Number.isFinite(i) || i < 0 || !k) return;
+      state.data.budget.rows[i] = state.data.budget.rows[i] || {};
+      const col = (readBudgetOptionsFromField(findAnyBudgetTableField()).columns||[]).find(c => c.key === k);
+      if(col && col.type === "number"){
+        state.data.budget.rows[i][k] = Number(inp.value||0);
+      }else{
+        state.data.budget.rows[i][k] = inp.value;
+      }
+    });
+  }
+}
+
 function bindSubmit(){
   const back = document.getElementById("btnBackS");
   if(back){
@@ -1018,6 +1057,7 @@ function bindSubmit(){
   btn.addEventListener("click", async ()=>{
     try{
       btn.disabled = true;
+      syncVisibleDomToState();
 
       // final budget guard
       const anyBudgetField = findAnyBudgetTableField();
@@ -1379,6 +1419,7 @@ function bindFields(activeDbStep, fields, idx, isFiles){
 
   if(next){
     next.addEventListener("click", ()=>{
+      syncVisibleDomToState();
       const ok = validateStep(activeDbStep);
       state.validByStep[state.currentKey] = ok;
 
