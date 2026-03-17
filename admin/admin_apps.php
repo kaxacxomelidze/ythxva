@@ -406,6 +406,24 @@ a.dl:hover{opacity:.9}
 
           <div id="amPretty" class="answerGrid"></div>
 
+          <div id="amExactWrap" style="display:none;margin-top:14px">
+            <hr>
+            <h2 style="margin:0 0 6px 0">ზუსტი შენახული ველები (როგორც გაიგზავნა)</h2>
+            <div class="mini">ყველა top-level ველი ნაჩვენებია ზუსტი მნიშვნელობით.</div>
+            <div style="overflow:auto;margin-top:10px">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="min-width:180px">ველი</th>
+                    <th style="min-width:140px">key</th>
+                    <th>მნიშვნელობა</th>
+                  </tr>
+                </thead>
+                <tbody id="amExactBody"></tbody>
+              </table>
+            </div>
+          </div>
+
           <div id="amUploadsWrap" style="display:none;margin-top:14px">
             <hr>
             <h2>ატვირთული ფაილები</h2>
@@ -1489,6 +1507,62 @@ function valueToDisplayText(v){
   return txt.trim() === "" ? "—" : txt;
 }
 
+function valueToPrettyJson(v){
+  if(v === null || v === undefined) return "";
+  if(typeof v === "string"){
+    const pv = parseJsonMaybe(v);
+    if(pv && typeof pv === "object"){
+      try{ return JSON.stringify(pv, null, 2); }catch(_){ return String(v); }
+    }
+    return v;
+  }
+  if(typeof v === "object"){
+    try{ return JSON.stringify(v, null, 2); }catch(_){ return String(v); }
+  }
+  return String(v);
+}
+
+function renderExactSubmitted(formData, app){
+  const wrap = document.getElementById("amExactWrap");
+  const body = document.getElementById("amExactBody");
+  if(!wrap || !body) return;
+
+  const fd = parseJsonMaybe(formData);
+  if(!fd || typeof fd !== "object"){
+    wrap.style.display = "none";
+    body.innerHTML = "";
+    return;
+  }
+
+  const grantId = Number(app?.grant_id || 0);
+  const rows = [];
+  for(const [k,v] of Object.entries(fd)){
+    if(String(k) === "__meta") continue;
+    const label = resolveLabelForKey(grantId, k);
+    rows.push({
+      key: String(k),
+      label: String(label || k),
+      value: valueToPrettyJson(v)
+    });
+  }
+
+  rows.sort((a,b)=>a.key.localeCompare(b.key));
+  if(!rows.length){
+    wrap.style.display = "none";
+    body.innerHTML = "";
+    return;
+  }
+
+  body.innerHTML = rows.map(r=>`
+    <tr>
+      <td><b>${esc(r.label)}</b></td>
+      <td class="small mono">${esc(r.key)}</td>
+      <td><pre class="small mono" style="white-space:pre-wrap;margin:0">${esc(r.value || "—")}</pre></td>
+    </tr>
+  `).join("");
+  wrap.style.display = "block";
+}
+
 function renderPretty(formData, app){
   const box = document.getElementById("amPretty");
   if(!box) return;
@@ -1771,6 +1845,7 @@ async function openApp(id, grantIdHint=0){
     window.__activeGrantIdForBudget = Number(a.grant_id || 0);
     renderApplicantTypePill(fd);
     renderPretty(fd, a);
+    renderExactSubmitted(fd, a);
     renderUploads(a.uploads || [], fd, Number(a.grant_id || 0));
 
     // ✅ budget: try resolved first, else deep search
