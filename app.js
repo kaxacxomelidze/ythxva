@@ -5,8 +5,6 @@
   if (window.__appJsLoaded) return;
   window.__appJsLoaded = true;
 
-  console.log('[app.js] loaded ✅');
-
   // ----------------------------
   // i18n dictionary
   // ----------------------------
