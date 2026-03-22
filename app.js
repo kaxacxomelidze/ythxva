@@ -5,8 +5,6 @@
   if (window.__appJsLoaded) return;
   window.__appJsLoaded = true;
 
-  console.log('[app.js] loaded ✅');
-
   // ----------------------------
   // i18n dictionary
   // ----------------------------
@@ -22,7 +20,7 @@
       'nav.about': 'ჩვენს შესახებ',
       'nav.contact': 'კონტაქტი',
 
-      'footer.searchPlaceholder': 'მოძებნე საიტზე...',
+      'footer.searchPlaceholder': 'მოძებნე სიახლე, პროგრამა ან გვერდი...',
       'footer.searchAria': 'ძიება',
       'footer.searchButton': 'ძიება',
       'footer.aboutTitle': 'ჩვენს შესახებ',
@@ -162,7 +160,7 @@
       'nav.about': 'About Us',
       'nav.contact': 'Contact',
 
-      'footer.searchPlaceholder': 'Search the site...',
+      'footer.searchPlaceholder': 'Search news, programs, or pages...',
       'footer.searchAria': 'Search',
       'footer.searchButton': 'Search',
       'footer.aboutTitle': 'About Us',
