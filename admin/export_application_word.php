@@ -303,46 +303,36 @@ body{
   font-weight:700;
 }
 .info-table,
-.budget-table{
+.details-table,
+.budget-table,
+.attachments-table{
   width:100%;
   border-collapse:collapse;
 }
 .info-table td,
+.details-table td,
 .budget-table th,
-.budget-table td{
+.budget-table td,
+.attachments-table td,
+.attachments-table th{
   border:1px solid #cbd5e1;
   padding:8px 10px;
   vertical-align:top;
 }
-.info-table .label{
-  width:28%;
-  background:#f8fafc;
-  font-weight:700;
-}
+.info-table .label,
+.details-table .label,
+.attachments-table th,
 .budget-table th{
   background:#f8fafc;
   font-weight:700;
-  text-align:left;
 }
-.answer-block{
-  border:1px solid #cbd5e1;
-  padding:10px 12px;
-  margin-bottom:10px;
+.info-table .label,
+.details-table .label{
+  width:30%;
 }
-.answer-label{
-  font-weight:700;
-  margin-bottom:6px;
-}
-.answer-value{
+.details-table .value{
   white-space:pre-wrap;
   word-break:break-word;
-}
-.attachments{
-  margin:0;
-  padding-left:20px;
-}
-.attachments li{
-  margin-bottom:6px;
 }
 .total{
   margin-top:8px;
@@ -376,6 +366,27 @@ body{
     </table>
   </div>
 
+  <div class="section">
+    <h2>განაცხადის დეტალები</h2>
+    <table class="details-table">
+      <tbody>
+        <?php if (!$prettyAnswers): ?>
+          <tr>
+            <td class="label">მონაცემები</td>
+            <td class="value">მონაცემები არ არის</td>
+          </tr>
+        <?php else: ?>
+          <?php foreach ($prettyAnswers as $row): ?>
+            <tr>
+              <td class="label"><?= esc_html_safe($row['label']) ?></td>
+              <td class="value"><?= nl2br(esc_html_safe($row['value'])) ?></td>
+            </tr>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </tbody>
+    </table>
+  </div>
+
   <?php if ($budget && !empty($budget['rows'])): ?>
     <div class="section">
       <h2>ბიუჯეტი</h2>
@@ -401,30 +412,23 @@ body{
     </div>
   <?php endif; ?>
 
-  <div class="section">
-    <h2>განაცხადის დეტალები</h2>
-    <?php if (!$prettyAnswers): ?>
-      <div class="answer-block">
-        <div class="answer-value">მონაცემები არ არის</div>
-      </div>
-    <?php else: ?>
-      <?php foreach ($prettyAnswers as $row): ?>
-        <div class="answer-block">
-          <div class="answer-label"><?= esc_html_safe($row['label']) ?></div>
-          <div class="answer-value"><?= nl2br(esc_html_safe($row['value'])) ?></div>
-        </div>
-      <?php endforeach; ?>
-    <?php endif; ?>
-  </div>
-
   <?php if ($uploads): ?>
     <div class="section">
       <h2>დართული ფაილები</h2>
-      <ul class="attachments">
-        <?php foreach ($uploads as $u): ?>
-          <li><?= esc_html_safe((string)$u['original_name']) ?></li>
-        <?php endforeach; ?>
-      </ul>
+      <table class="attachments-table">
+        <thead>
+          <tr>
+            <th>ფაილის სახელი</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($uploads as $u): ?>
+            <tr>
+              <td><?= esc_html_safe((string)$u['original_name']) ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
     </div>
   <?php endif; ?>
 </div>
