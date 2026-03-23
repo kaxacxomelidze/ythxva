@@ -140,8 +140,7 @@ $camps = $stmt->fetchAll(PDO::FETCH_ASSOC);
       box-shadow: var(--shadow);
     }
 
-    .search-intro{display:flex;align-items:center;gap:14px;flex:1 1 320px}
-    .search-icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;background:rgba(96,165,250,.16);color:#93c5fd;font-size:24px;border:1px solid rgba(96,165,250,.3)}
+    .search-intro{flex:1 1 320px}
 
     .search{
       flex:1 1 360px;
@@ -338,7 +337,7 @@ $camps = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div id="siteHeaderMount"></div>
 
   <main class="wrap">
-    <section class="bar"><div class="search-intro"><div class="search-icon"><i class="fa-solid fa-campground"></i></div><div><h1 style="margin:0 0 6px;font-size:30px;color:#fff" data-i18n="camps.heroTitle">ბანაკები</h1><div style="color:rgba(229,231,235,.78);font-weight:700" data-i18n="camps.heroSubtitle">აღმოაჩინე ახალგაზრდული ბანაკები, თარიღები და რეგისტრაციის დეტალები.</div></div></div>
+    <section class="bar"><div class="search-intro"><h1 style="margin:0 0 6px;font-size:30px;color:#fff" data-i18n="camps.heroTitle">ბანაკები</h1><div style="color:rgba(229,231,235,.78);font-weight:700" data-i18n="camps.heroSubtitle">აღმოაჩინე ახალგაზრდული ბანაკები, თარიღები და რეგისტრაციის დეტალები.</div></div>
       
       <div class="search">
         <i class="fa-solid fa-magnifying-glass"></i>

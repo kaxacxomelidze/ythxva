@@ -14,16 +14,14 @@
   <meta property="og:url" content="https://sspm.ge/youthagency/about/">
   <meta property="og:image" content="https://sspm.ge/youthagency/imgs/youthagencyicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="/youthagency/assets.css?v=1">
+    <link rel="stylesheet" href="/youthagency/assets.css?v=1">
   <style>
     .page{padding:48px 18px 60px;}
     .page-card{max-width:980px;margin:0 auto;background:#fff;border-radius:22px;padding:32px;box-shadow:0 18px 36px rgba(15,23,42,.08);border:1px solid rgba(15,23,42,.08);}
-    .hero-icon{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1d4ed8;font-size:28px;margin-bottom:18px;}
     .page-card h1{margin:0 0 14px;color:#1f2a44;font-size:28px;font-weight:800;}
     .page-card p{margin:0;color:#3b445a;font-size:16px;line-height:1.7;}
     @media (max-width:768px){.page{padding:32px 16px 46px}.page-card{padding:24px}}
-    @media (max-width:480px){.page{padding:24px 14px 40px}.page-card{padding:18px}.hero-icon{width:56px;height:56px;font-size:24px}.page-card h1{font-size:22px}.page-card p{font-size:15px}}
+    @media (max-width:480px){.page{padding:24px 14px 40px}.page-card{padding:18px}.page-card h1{font-size:22px}.page-card p{font-size:15px}}
   </style>
 </head>
 <body>

@@ -96,18 +96,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .page{padding:48px 18px 60px}
     .page-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:24px;align-items:start}
     .page-card{background:#fff;border-radius:22px;padding:28px;box-shadow:0 18px 36px rgba(15,23,42,.08);border:1px solid rgba(15,23,42,.08)}
-    .page-card h1{margin:0 0 8px;color:#1f2a44;font-size:28px;font-weight:800;display:flex;align-items:center;gap:12px}.page-card p{margin:0 0 22px;color:#3b445a;font-size:15px;line-height:1.6}
-    .title-icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#2563eb;font-size:22px;flex:0 0 auto}
+    .page-card h1{margin:0 0 8px;color:#1f2a44;font-size:28px;font-weight:800}.page-card p{margin:0 0 22px;color:#3b445a;font-size:15px;line-height:1.6}
     .form-grid{display:grid;gap:16px}.form-row{display:grid;gap:8px}label{font-size:14px;font-weight:700;color:#243252}input,textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(15,23,42,.16);font-family:inherit;font-size:14px;background:#f8fafc}textarea{min-height:140px;resize:vertical}
     .btn-submit{border:0;padding:12px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;cursor:pointer;font-size:14px;width:fit-content}.btn-submit:hover{background:var(--btn-hover)}
     .notice{padding:12px 14px;border-radius:12px;margin-bottom:18px;font-size:14px}.notice.success{background:rgba(22,163,74,.12);border:1px solid rgba(22,163,74,.3);color:#14532d}.notice.error{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#7f1d1d}
     .info-card{display:grid;gap:18px}.info-panel,.map-card{padding:22px;border-radius:20px;border:1px solid rgba(15,23,42,.12);background:linear-gradient(135deg,#f8fafc,#f1f5f9)}
-    .info-panel h2,.map-card h2{margin:0 0 14px;font-size:18px;color:#1f2a44;font-weight:800;display:flex;align-items:center;gap:10px}.info-list{display:grid;gap:10px}.info-row{display:flex;align-items:center;gap:12px;color:#334155;font-weight:700;padding:12px 14px;border-radius:12px;background:#fff;border:1px solid rgba(15,23,42,.08)}.info-row i{color:#3b82f6;width:20px;text-align:center}
+    .info-panel h2,.map-card h2{margin:0 0 14px;font-size:18px;color:#1f2a44;font-weight:800}.info-list{display:grid;gap:10px}.info-row{color:#334155;font-weight:700;padding:12px 14px;border-radius:12px;background:#fff;border:1px solid rgba(15,23,42,.08)}
     .map-frame{width:100%;height:320px;border:0;border-radius:16px;display:block;box-shadow:0 14px 28px rgba(15,23,42,.08)}
     .map-note{margin:12px 0 0;color:#475569;font-size:14px;line-height:1.6}
     @media (max-width:980px){.page-grid{grid-template-columns:1fr}.info-card{order:2}}
     @media (max-width:768px){.page{padding:32px 16px 46px}.page-card{padding:22px}.info-panel,.map-card{padding:18px}}
-    @media (max-width:480px){.page{padding:24px 14px 40px}.page-card{padding:18px}.page-card h1{font-size:22px;align-items:flex-start}.title-icon{width:46px;height:46px;font-size:20px}.page-card p{font-size:14px}.form-grid{gap:12px}.btn-submit{width:100%}.info-row{align-items:flex-start}}
+    @media (max-width:480px){.page{padding:24px 14px 40px}.page-card{padding:18px}.page-card h1{font-size:22px}.page-card p{font-size:14px}.form-grid{gap:12px}.btn-submit{width:100%}}
   </style>
 </head>
 <body>
@@ -115,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <main class="page">
     <section class="page-grid">
       <article class="page-card">
-        <h1><span class="title-icon"><i class="fa-solid fa-envelope-open-text"></i></span><span data-i18n="contact.title">კონტაქტი</span></h1>
+        <h1 data-i18n="contact.title">კონტაქტი</h1>
         <p data-i18n="contact.subtitle">გამოგვიგზავნეთ შეტყობინება და მალე დაგიკავშირდებით.</p>
         <?php if ($success): ?><div class="notice success"><strong data-i18n="contact.successTitle">გმადლობთ!</strong> <span data-i18n="contact.successText">თქვენი შეტყობინება მიღებულია. მალე დაგიკავშირდებით.</span></div><?php elseif ($errors): ?><div class="notice error"><span data-i18n="contact.error">გთხოვთ სწორად შეავსოთ აუცილებელი ველები.</span></div><?php endif; ?>
         <form class="form-grid" method="post">
@@ -129,15 +128,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </article>
       <aside class="info-card">
         <div class="info-panel">
-          <h2 data-i18n="contact.infoTitle"><i class="fa-solid fa-circle-info"></i> საკონტაქტო ინფორმაცია</h2>
+          <h2 data-i18n="contact.infoTitle">საკონტაქტო ინფორმაცია</h2>
           <div class="info-list">
-            <div class="info-row"><i class="fa-solid fa-location-dot"></i><span data-i18n="contact.address">ვაჟა ფშაველას ქ. #76</span></div>
-            <div class="info-row"><i class="fa-solid fa-phone"></i><span data-i18n="contact.phoneInfo">032 230 51 65</span></div>
-            <div class="info-row"><i class="fa-solid fa-envelope"></i><span data-i18n="contact.emailInfo">info@youth.ge</span></div>
+            <div class="info-row"><span data-i18n="contact.address">ვაჟა ფშაველას ქ. #76</span></div>
+            <div class="info-row"><span data-i18n="contact.phoneInfo">032 230 51 65</span></div>
+            <div class="info-row"><span data-i18n="contact.emailInfo">info@youth.ge</span></div>
           </div>
         </div>
         <div class="map-card">
-          <h2><i class="fa-solid fa-map-location-dot"></i> <span data-i18n="contact.mapTitle">მდებარეობა რუკაზე</span></h2>
+          <h2 data-i18n="contact.mapTitle">მდებარეობა რუკაზე</h2>
           <iframe class="map-frame" title="Youth Agency location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=76%20Vazha-Pshavela%20Ave%2C%20Tbilisi&z=15&output=embed"></iframe>
           <p class="map-note" data-i18n="contact.mapNote">ოფისი შეგიძლიათ მარტივად ნახოთ რუკაზე და დაგეგმოთ ვიზიტი წინასწარ.</p>
         </div>
