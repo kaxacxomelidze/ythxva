@@ -102,6 +102,98 @@ function normalize_budget_payload_export($raw): ?array {
   ];
 }
 
+function normalize_activity_payload_export($raw): ?array {
+  $raw = parse_json_maybe_export($raw) ?? $raw;
+
+  if (is_string($raw)) {
+    $decoded = json_decode(trim($raw), true);
+    if (is_array($decoded)) $raw = $decoded;
+  }
+
+  if (!is_array($raw)) return null;
+
+  $rowsSource = null;
+  if (isset($raw['rows']) && is_array($raw['rows'])) {
+    $rowsSource = $raw['rows'];
+  } elseif (array_keys($raw) === range(0, count($raw) - 1)) {
+    $rowsSource = $raw;
+  }
+
+  if (!is_array($rowsSource)) return null;
+
+  $rows = [];
+  foreach ($rowsSource as $row) {
+    $row = parse_json_maybe_export($row) ?? $row;
+    if (!is_array($row)) continue;
+
+    $activity = trim((string)($row['activity'] ?? $row['title'] ?? $row['name'] ?? ''));
+    $start = trim((string)($row['start_date'] ?? $row['start'] ?? ''));
+    $end = trim((string)($row['end_date'] ?? $row['end'] ?? ''));
+    $coverage = trim((string)($row['coverage'] ?? $row['description'] ?? $row['details'] ?? ''));
+
+    if ($activity === '' && $start === '' && $end === '' && $coverage === '') continue;
+
+    $rows[] = [
+      'activity' => $activity,
+      'start_date' => $start,
+      'end_date' => $end,
+      'coverage' => $coverage,
+    ];
+  }
+
+  return $rows ? ['rows' => $rows, 'total_rows' => count($rows)] : null;
+}
+
+function detect_activity_tables_export(array $formData, array $fieldTypes = [], array $fieldLabels = []): array {
+  $tables = [];
+  $seen = [];
+
+  foreach ($formData as $k => $v) {
+    if ((string)$k === '__meta') continue;
+
+    $nk = normalize_field_key_export((string)$k);
+    $type = strtolower((string)($fieldTypes[$nk] ?? ''));
+    $label = trim((string)($fieldLabels[$nk] ?? $fieldLabels[(string)$k] ?? (string)$k));
+    $labelLower = strtolower($label);
+    $keyLower = strtolower((string)$k);
+
+    $activity = normalize_activity_payload_export($v);
+    if ($activity === null) continue;
+
+    $looksLikeActivity =
+      str_contains($type, 'activity') ||
+      str_contains($labelLower, 'აქტივ') ||
+      str_contains($labelLower, 'action') ||
+      str_contains($keyLower, 'action_plan');
+
+    if (!$looksLikeActivity) continue;
+
+    $signature = md5(json_encode($activity['rows'], JSON_UNESCAPED_UNICODE));
+    if (isset($seen[$signature])) continue;
+    $seen[$signature] = true;
+
+    $tables[] = [
+      'key' => (string)$k,
+      'label' => $label !== '' ? $label : 'აქტივობების გეგმა',
+      'rows' => $activity['rows'],
+      'total_rows' => $activity['total_rows'],
+    ];
+  }
+
+  return $tables;
+}
+
+function should_skip_answer_key_export(string $key, array $skipPrefixes): bool {
+  foreach ($skipPrefixes as $prefix) {
+    if ($prefix === '') continue;
+    if ($key === $prefix) return true;
+    if (str_starts_with($key, $prefix . '.rows.')) return true;
+    if (str_starts_with($key, $prefix . '.total')) return true;
+    if (str_starts_with($key, $prefix . '.total_rows')) return true;
+  }
+  return false;
+}
+
 function value_to_text_export($v): string {
   if ($v === null) return '—';
   if (is_bool($v)) return $v ? 'true' : 'false';
@@ -227,6 +319,7 @@ try {
 }
 
 $budget = detect_budget_export($formData, $fieldTypes, $fieldLabels);
+$activityTables = detect_activity_tables_export($formData, $fieldTypes, $fieldLabels);
 
 $up = $pdo->prepare("
   SELECT original_name, file_path, size_bytes, mime_type, created_at
@@ -240,17 +333,35 @@ $uploads = $up->fetchAll(PDO::FETCH_ASSOC) ?: [];
 $answers = [];
 flatten_answers_export($formData, '', $answers);
 
+$skipAnswerPrefixes = [];
+if ($budget) {
+  foreach ($formData as $k => $v) {
+    if ((string)$k === '__meta') continue;
+    $candidate = normalize_budget_payload_export($v);
+    if ($candidate && json_encode($candidate['rows'], JSON_UNESCAPED_UNICODE) === json_encode($budget['rows'], JSON_UNESCAPED_UNICODE)) {
+      $skipAnswerPrefixes[] = (string)$k;
+    }
+  }
+}
+foreach ($activityTables as $tbl) {
+  $skipAnswerPrefixes[] = (string)$tbl['key'];
+}
+$skipAnswerPrefixes = array_values(array_unique(array_filter($skipAnswerPrefixes)));
+
 $prettyAnswers = [];
 foreach ($answers as [$key, $value]) {
-  $parts = explode('.', (string)$key);
+  $key = (string)$key;
+  if (should_skip_answer_key_export($key, $skipAnswerPrefixes)) continue;
+
+  $parts = explode('.', $key);
   $last = end($parts);
   $norm = normalize_field_key_export((string)$last);
 
-  $label = $fieldLabels[$norm] ?? $fieldLabels[(string)$key] ?? (string)$key;
+  $label = $fieldLabels[$norm] ?? $fieldLabels[$key] ?? $key;
 
   $prettyAnswers[] = [
     'label' => (string)$label,
-    'key'   => (string)$key,
+    'key'   => $key,
     'value' => trim((string)$value) !== '' ? (string)$value : '—',
   ];
 }
@@ -386,6 +497,34 @@ body{
       </tbody>
     </table>
   </div>
+
+  <?php if ($activityTables): ?>
+    <?php foreach ($activityTables as $table): ?>
+      <div class="section">
+        <h2><?= esc_html_safe((string)$table['label']) ?></h2>
+        <table class="budget-table">
+          <thead>
+            <tr>
+              <th style="width:28%">აქტივობა</th>
+              <th style="width:18%">დაწყების თარიღი</th>
+              <th style="width:18%">დასრულების თარიღი</th>
+              <th>აქტივობის გაშუქება</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($table['rows'] as $row): ?>
+              <tr>
+                <td><?= esc_html_safe((string)$row['activity']) ?></td>
+                <td><?= esc_html_safe((string)$row['start_date']) ?></td>
+                <td><?= esc_html_safe((string)$row['end_date']) ?></td>
+                <td><?= esc_html_safe((string)$row['coverage']) ?></td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    <?php endforeach; ?>
+  <?php endif; ?>
 
   <?php if ($budget && !empty($budget['rows'])): ?>
     <div class="section">
