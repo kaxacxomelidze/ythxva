@@ -270,139 +270,119 @@ header('Pragma: no-cache');
 <style>
 body{
   font-family: DejaVu Sans, Arial, sans-serif;
-  color:#1f2937;
+  color:#111827;
   font-size:12pt;
-  line-height:1.45;
+  line-height:1.5;
   margin:0;
   padding:0;
 }
 .page{
-  max-width:920px;
+  max-width:860px;
   margin:0 auto;
-  padding:18px;
+  padding:24px 28px 32px;
 }
-.head{
-  background:linear-gradient(135deg,#0f172a,#1e3a8a);
-  color:#fff;
-  padding:24px 26px;
-  border-radius:16px;
-  margin-bottom:22px;
+.doc-title{
+  text-align:center;
+  margin-bottom:18px;
 }
-.head h1{
-  margin:0 0 8px 0;
-  font-size:24pt;
+.doc-title h1{
+  margin:0;
+  font-size:20pt;
+  font-weight:700;
 }
-.head .meta{
-  font-size:11pt;
-  opacity:.95;
-}
-.grid{
-  width:100%;
-  border-collapse:separate;
-  border-spacing:10px;
-  margin-bottom:12px;
-}
-.card{
-  background:#f8fafc;
-  border:1px solid #dbe4f0;
-  border-radius:14px;
-  padding:14px 16px;
-}
-.card .label{
-  font-size:10pt;
-  color:#64748b;
-  margin-bottom:6px;
-}
-.card .value{
-  font-size:14pt;
-  font-weight:bold;
-  color:#0f172a;
+.doc-title .grant{
+  margin-top:8px;
+  font-size:13pt;
 }
 .section{
-  margin-top:22px;
+  margin-top:18px;
 }
 .section h2{
-  font-size:16pt;
-  color:#0f172a;
-  border-bottom:2px solid #dbe4f0;
-  padding-bottom:6px;
-  margin:0 0 12px 0;
+  margin:0 0 10px 0;
+  font-size:13pt;
+  font-weight:700;
 }
-.table{
+.info-table,
+.budget-table{
   width:100%;
   border-collapse:collapse;
 }
-.table th,
-.table td{
-  border:1px solid #dbe4f0;
-  padding:10px;
-  text-align:left;
+.info-table td,
+.budget-table th,
+.budget-table td{
+  border:1px solid #cbd5e1;
+  padding:8px 10px;
   vertical-align:top;
 }
-.table th{
-  background:#eff6ff;
-  color:#1d4ed8;
-  font-weight:bold;
+.info-table .label{
+  width:28%;
+  background:#f8fafc;
+  font-weight:700;
 }
-.small{
-  font-size:10pt;
-  color:#64748b;
+.budget-table th{
+  background:#f8fafc;
+  font-weight:700;
+  text-align:left;
 }
-.totalBox{
-  margin-top:10px;
+.answer-block{
+  border:1px solid #cbd5e1;
+  padding:10px 12px;
+  margin-bottom:10px;
+}
+.answer-label{
+  font-weight:700;
+  margin-bottom:6px;
+}
+.answer-value{
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+.attachments{
+  margin:0;
+  padding-left:20px;
+}
+.attachments li{
+  margin-bottom:6px;
+}
+.total{
+  margin-top:8px;
   text-align:right;
-  font-weight:bold;
-  font-size:13pt;
-  color:#0f172a;
-}
-.key{
-  color:#64748b;
-  font-size:10pt;
-  margin-top:4px;
+  font-weight:700;
 }
 </style>
 </head>
 <body>
 <div class="page">
-
-  <div class="head">
-    <h1>განაცხადი #<?= (int)$app['id'] ?></h1>
-    <div class="meta">
-      გრანტი: <b><?= esc_html_safe((string)($app['grant_title'] ?? '—')) ?></b><br>
-      შექმნა: <b><?= esc_html_safe((string)($app['created_at'] ?? '—')) ?></b> •
-      სტატუსი: <b><?= esc_html_safe((string)($app['status'] ?? 'submitted')) ?></b> •
-      ქულა: <b><?= (int)($app['rating'] ?? 0) ?></b>
-    </div>
+  <div class="doc-title">
+    <h1>ახალგაზრდობის სააგენტო გრანტი</h1>
+    <div class="grant"><b><?= esc_html_safe((string)($app['grant_title'] ?? '—')) ?></b></div>
   </div>
 
-  <table class="grid">
-    <tr>
-      <td class="card" style="width:25%">
-        <div class="label">განმცხადებელი</div>
-        <div class="value"><?= esc_html_safe((string)($app['applicant_name'] ?? '—')) ?></div>
-      </td>
-      <td class="card" style="width:25%">
-        <div class="label">ელ.ფოსტა</div>
-        <div class="value"><?= esc_html_safe((string)($app['email'] ?? '—')) ?></div>
-      </td>
-      <td class="card" style="width:25%">
-        <div class="label">ტელეფონი</div>
-        <div class="value"><?= esc_html_safe((string)($app['phone'] ?? '—')) ?></div>
-      </td>
-      <td class="card" style="width:25%">
-        <div class="label">ბიუჯეტი</div>
-        <div class="value"><?= $budget ? esc_html_safe(format_money_export((float)$budget['total']) . ' ₾') : '—' ?></div>
-      </td>
-    </tr>
-  </table>
+  <div class="section">
+    <h2>განმცხადებლის ინფორმაცია</h2>
+    <table class="info-table">
+      <tr>
+        <td class="label">სახელი და გვარი</td>
+        <td><?= esc_html_safe((string)($app['applicant_name'] ?? '—')) ?></td>
+      </tr>
+      <tr>
+        <td class="label">ელფოსტა</td>
+        <td><?= esc_html_safe((string)($app['email'] ?? '—')) ?></td>
+      </tr>
+      <tr>
+        <td class="label">ტელეფონი</td>
+        <td><?= esc_html_safe((string)($app['phone'] ?? '—')) ?></td>
+      </tr>
+    </table>
+  </div>
 
   <?php if ($budget && !empty($budget['rows'])): ?>
     <div class="section">
       <h2>ბიუჯეტი</h2>
-      <table class="table">
+      <table class="budget-table">
         <thead>
           <tr>
-            <th style="width:24%">კატეგორია</th>
+            <th style="width:28%">კატეგორია</th>
             <th>აღწერა</th>
             <th style="width:18%">თანხა (₾)</th>
           </tr>
@@ -410,85 +390,43 @@ body{
         <tbody>
           <?php foreach ($budget['rows'] as $row): ?>
             <tr>
-              <td><b><?= esc_html_safe((string)$row['cat']) ?></b></td>
+              <td><?= esc_html_safe((string)$row['cat']) ?></td>
               <td><?= esc_html_safe((string)$row['desc']) ?></td>
-              <td><b><?= esc_html_safe(format_money_export((float)$row['amount'])) ?></b></td>
+              <td><?= esc_html_safe(format_money_export((float)$row['amount'])) ?></td>
             </tr>
           <?php endforeach; ?>
         </tbody>
       </table>
-      <div class="totalBox">ჯამი: <?= esc_html_safe(format_money_export((float)$budget['total'])) ?> ₾</div>
+      <div class="total">ჯამი: <?= esc_html_safe(format_money_export((float)$budget['total'])) ?> ₾</div>
     </div>
   <?php endif; ?>
 
   <div class="section">
-    <h2>ფორმის პასუხები</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th style="width:32%">ველი</th>
-          <th>მნიშვნელობა</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php if (!$prettyAnswers): ?>
-          <tr><td colspan="2">მონაცემები არ არის</td></tr>
-        <?php else: ?>
-          <?php foreach ($prettyAnswers as $row): ?>
-            <tr>
-              <td>
-                <b><?= esc_html_safe($row['label']) ?></b>
-                <div class="key"><?= esc_html_safe($row['key']) ?></div>
-              </td>
-              <td><?= nl2br(esc_html_safe($row['value'])) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        <?php endif; ?>
-      </tbody>
-    </table>
+    <h2>განაცხადის დეტალები</h2>
+    <?php if (!$prettyAnswers): ?>
+      <div class="answer-block">
+        <div class="answer-value">მონაცემები არ არის</div>
+      </div>
+    <?php else: ?>
+      <?php foreach ($prettyAnswers as $row): ?>
+        <div class="answer-block">
+          <div class="answer-label"><?= esc_html_safe($row['label']) ?></div>
+          <div class="answer-value"><?= nl2br(esc_html_safe($row['value'])) ?></div>
+        </div>
+      <?php endforeach; ?>
+    <?php endif; ?>
   </div>
 
-  <div class="section">
-    <h2>ატვირთული ფაილები</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th style="width:34%">ფაილი</th>
-          <th style="width:15%">ზომა</th>
-          <th style="width:22%">ტიპი</th>
-          <th>ბილიკი</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php if (!$uploads): ?>
-          <tr><td colspan="4">ფაილები არ არის ატვირთული</td></tr>
-        <?php else: ?>
-          <?php foreach ($uploads as $u): ?>
-            <tr>
-              <td><b><?= esc_html_safe((string)$u['original_name']) ?></b></td>
-              <td><?= esc_html_safe(number_format(((float)$u['size_bytes'] / 1024 / 1024), 2)) ?> MB</td>
-              <td><?= esc_html_safe((string)($u['mime_type'] ?? '—')) ?></td>
-              <td><?= esc_html_safe((string)($u['file_path'] ?? '—')) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        <?php endif; ?>
-      </tbody>
-    </table>
-  </div>
-
-  <?php if (!empty($app['admin_note'])): ?>
+  <?php if ($uploads): ?>
     <div class="section">
-      <h2>ადმინის შენიშვნა</h2>
-      <table class="table">
-        <tbody>
-          <tr>
-            <td><?= nl2br(esc_html_safe((string)$app['admin_note'])) ?></td>
-          </tr>
-        </tbody>
-      </table>
+      <h2>დართული ფაილები</h2>
+      <ul class="attachments">
+        <?php foreach ($uploads as $u): ?>
+          <li><?= esc_html_safe((string)$u['original_name']) ?></li>
+        <?php endforeach; ?>
+      </ul>
     </div>
   <?php endif; ?>
-
 </div>
 </body>
 </html>
