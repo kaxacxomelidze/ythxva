@@ -14,7 +14,8 @@
   <meta property="og:url" content="https://sspm.ge/rules/">
   <meta property="og:image" content="https://sspm.ge/imgs/youthagencyicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets.css?v=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/assets.css?v=1">
   <style>
     .page{padding:48px 18px 60px}.page-card{max-width:980px;margin:0 auto;background:#fff;border-radius:18px;padding:28px;box-shadow:0 18px 36px rgba(15,23,42,.08);border:1px solid rgba(15,23,42,.08)}
     .hero-head{margin-bottom:18px}
