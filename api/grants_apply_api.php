@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../admin/config.php';
 $pdo = db();
+security_headers(true);
+enforce_rate_limit('grants_apply_api', 40, 300, true);
 
 function json_out(array $d, int $code=200): void {
   http_response_code($code);

@@ -3,6 +3,8 @@ declare(strict_types=1);
 header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../admin/config.php';
+security_headers(true);
+enforce_rate_limit('data_news_api', 180, 60, true);
 
 try {
   $pdo = db();

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../db.php'; // must define $pdo (PDO)
+security_headers(true);
+enforce_rate_limit('admin_api_camps', 600, 60, true);
 
 // Make sure session exists (sometimes config.php already starts it, but safe)
 if (session_status() !== PHP_SESSION_ACTIVE) { @session_start(); }

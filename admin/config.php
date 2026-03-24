@@ -57,6 +57,76 @@ if (!defined('DB_HOST')) define('DB_HOST', env_or('DB_HOST', '127.0.0.1'));
 if (!defined('DB_NAME')) define('DB_NAME', env_or('DB_NAME', 'sspm_test'));
 if (!defined('DB_USER')) define('DB_USER', env_or('DB_USER', 'sspm_main'));
 if (!defined('DB_PASS')) define('DB_PASS', env_or('DB_PASS', 'themainfirst!@#$'));
+
+if (!function_exists('security_headers')) {
+  function security_headers(bool $isJson = false): void {
+    if (headers_sent()) return;
+    header('X-Frame-Options: SAMEORIGIN');
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+    if ($isJson) {
+      header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+      header('Pragma: no-cache');
+    }
+  }
+}
+
+if (!function_exists('rate_limit_exceeded')) {
+  function rate_limit_exceeded(string $bucket, int $max = 120, int $windowSec = 60): bool {
+    $ip = (string)($_SERVER['HTTP_CF_CONNECTING_IP'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown');
+    $key = hash('sha256', $bucket . '|' . $ip);
+    $dir = sys_get_temp_dir() . '/sspm_rate_limits';
+    if (!is_dir($dir)) @mkdir($dir, 0775, true);
+    $file = $dir . '/' . $key . '.json';
+
+    $now = time();
+    $data = ['start' => $now, 'count' => 0];
+
+    $fp = @fopen($file, 'c+');
+    if (!$fp) return false;
+    try {
+      if (!flock($fp, LOCK_EX)) return false;
+      $raw = stream_get_contents($fp);
+      if (is_string($raw) && trim($raw) !== '') {
+        $j = json_decode($raw, true);
+        if (is_array($j) && isset($j['start'], $j['count'])) {
+          $data = ['start' => (int)$j['start'], 'count' => (int)$j['count']];
+        }
+      }
+
+      if (($now - $data['start']) >= $windowSec) {
+        $data = ['start' => $now, 'count' => 0];
+      }
+
+      $data['count']++;
+
+      ftruncate($fp, 0);
+      rewind($fp);
+      fwrite($fp, json_encode($data));
+      fflush($fp);
+      flock($fp, LOCK_UN);
+    } finally {
+      fclose($fp);
+    }
+
+    return $data['count'] > $max;
+  }
+}
+
+if (!function_exists('enforce_rate_limit')) {
+  function enforce_rate_limit(string $bucket, int $max = 120, int $windowSec = 60, bool $json = true): void {
+    if (!rate_limit_exceeded($bucket, $max, $windowSec)) return;
+    http_response_code(429);
+    if ($json) {
+      if (!headers_sent()) header('Content-Type: application/json; charset=utf-8');
+      echo json_encode(['ok' => false, 'error' => 'Too many requests. Please try again later.']);
+    } else {
+      echo 'Too many requests. Please try again later.';
+    }
+    exit;
+  }
+}
 /**
  * =========================
  * PDO Database
