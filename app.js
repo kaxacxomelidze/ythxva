@@ -1,4 +1,4 @@
-// /youthagency/app.js (FULL FIXED + IMPROVED)
+// /app.js (FULL FIXED + IMPROVED)
 (function () {
   'use strict';
 
@@ -471,10 +471,10 @@
       }
     });
 
-    // home exact match: /youthagency/ highlight home
+    // home exact match: / highlight home
     if (!best) {
-      const home = Array.from(links).find(a => normalizePath(a.getAttribute('data-active') || '') === '/youthagency/');
-      if (home && current === '/youthagency/') best = home;
+      const home = Array.from(links).find(a => normalizePath(a.getAttribute('data-active') || '') === '/');
+      if (home && current === '/') best = home;
     }
 
     if (best) {

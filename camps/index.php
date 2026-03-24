@@ -88,11 +88,11 @@ $camps = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Youth Agency • Camps</title>
-  <link rel="icon" type="image/png" href="/youthagency/imgs/youthagencyicon.png">
+  <link rel="icon" type="image/png" href="/imgs/youthagencyicon.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="/youthagency/assets.css?v=1">
+  <link rel="stylesheet" href="/assets.css?v=1">
 
   <style>
     :root{
@@ -374,7 +374,7 @@ $camps = $stmt->fetchAll(PDO::FETCH_ASSOC);
           $slug = (string)($c['slug'] ?? '');
           if ($slug === '') $slug = 'camp-' . $id;
 
-          $url = "/youthagency/camps/$id/" . rawurlencode($slug);
+          $url = "/camps/$id/" . rawurlencode($slug);
 
           $name  = (string)($c['name'] ?? '');
           $nameEn  = (string)($c['name_en'] ?? '');
@@ -529,13 +529,13 @@ $camps = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     (async () => {
       try {
-        await inject('siteHeaderMount', '/youthagency/header.html');
+        await inject('siteHeaderMount', '/header.html');
         try{
-          await loadScript('/youthagency/app.js');
+          await loadScript('/app.js');
           if (typeof window.initHeader === 'function') window.initHeader();
         }catch(e){}
 
-        await inject('siteFooterMount', '/youthagency/footer.html');
+        await inject('siteFooterMount', '/footer.html');
 
         initCampsClassic();
       } catch (err) {

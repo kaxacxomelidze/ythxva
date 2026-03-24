@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Youth Agency • 404</title>
   <meta name="robots" content="noindex,follow">
-  <link rel="icon" type="image/png" href="/youthagency/imgs/youthagencyicon.png">
+  <link rel="icon" type="image/png" href="/imgs/youthagencyicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/youthagency/assets.css?v=1">
+    <link rel="stylesheet" href="/assets.css?v=1">
   <style>
     .page{min-height:calc(100vh - 160px);display:grid;place-items:center;padding:40px 18px;background:radial-gradient(circle at top, rgba(96,165,250,.14), transparent 36%), #f8fafc}
     .card{max-width:720px;width:100%;background:#fff;border-radius:24px;padding:34px;text-align:center;border:1px solid rgba(15,23,42,.08);box-shadow:0 24px 48px rgba(15,23,42,.08)}
@@ -17,12 +17,12 @@
 </head>
 <body>
   <div id="siteHeaderMount"></div>
-  <main class="page"><section class="card"><div class="code">404</div><h1 data-i18n="notFound.title">გვერდი ვერ მოიძებნა</h1><p data-i18n="notFound.body">შესაძლოა მისამართი არასწორად აკრიფეთ ან მოთხოვნილი გვერდი გადატანილია.</p><div class="actions"><a class="btn-link primary" href="/youthagency/"><span data-i18n="notFound.home">მთავარზე დაბრუნება</span></a><a class="btn-link" href="/youthagency/contact/"><span data-i18n="notFound.contact">დაგვიკავშირდით</span></a></div></section></main>
+  <main class="page"><section class="card"><div class="code">404</div><h1 data-i18n="notFound.title">გვერდი ვერ მოიძებნა</h1><p data-i18n="notFound.body">შესაძლოა მისამართი არასწორად აკრიფეთ ან მოთხოვნილი გვერდი გადატანილია.</p><div class="actions"><a class="btn-link primary" href="/"><span data-i18n="notFound.home">მთავარზე დაბრუნება</span></a><a class="btn-link" href="/contact/"><span data-i18n="notFound.contact">დაგვიკავშირდით</span></a></div></section></main>
   <div id="siteFooterMount"></div>
   <script>
     async function inject(id, file) { const el = document.getElementById(id); if (!el) throw new Error(`Mount element not found: #${id}`); const res = await fetch(file + '?v=2'); if (!res.ok) throw new Error(`${file} not found. Status: ${res.status}`); el.innerHTML = await res.text(); }
     async function loadScript(src) { return new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = src + '?v=2'; s.onload = resolve; s.onerror = () => reject(new Error(`Failed to load script: ${src}`)); document.body.appendChild(s); }); }
-    (async () => { try { await inject('siteHeaderMount', '/youthagency/header.html'); await loadScript('/youthagency/app.js'); if (typeof window.initHeader === 'function') window.initHeader(); await inject('siteFooterMount', '/youthagency/footer.html'); } catch (err) { console.error(err); } })();
+    (async () => { try { await inject('siteHeaderMount', '/header.html'); await loadScript('/app.js'); if (typeof window.initHeader === 'function') window.initHeader(); await inject('siteFooterMount', '/footer.html'); } catch (err) { console.error(err); } })();
   </script>
 </body>
 </html>
