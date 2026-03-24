@@ -27,8 +27,25 @@ function out(array $j): void {
   echo json_encode($j, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
   exit;
 }
-function ok(array $extra = []): void { out(["ok"=>true] + $extra); }
-function fail(string $msg, int $code = 400): void { http_response_code($code); out(["ok"=>false,"error"=>$msg]); }
+function audit_api_event(string $result, ?string $error = null): void {
+  if (!function_exists('log_admin_safe')) return;
+  log_admin_safe('api_camps_' . $result, 'camps_api', null, [
+    'action' => (string)($_GET['action'] ?? ''),
+    'method' => (string)($_SERVER['REQUEST_METHOD'] ?? 'GET'),
+    'status' => http_response_code() ?: 200,
+    'error' => $error,
+    'ip' => client_ip(),
+  ]);
+}
+function ok(array $extra = []): void {
+  audit_api_event('ok');
+  out(["ok"=>true] + $extra);
+}
+function fail(string $msg, int $code = 400): void {
+  http_response_code($code);
+  audit_api_event('fail', $msg);
+  out(["ok"=>false,"error"=>$msg]);
+}
 
 /* ----------------------------- auth + db --------------------------------- */
 if (empty($_SESSION['admin_logged_in']) || (int)($_SESSION['admin_logged_in']) !== 1) {

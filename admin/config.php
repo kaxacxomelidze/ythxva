@@ -318,12 +318,17 @@ if (!function_exists('client_ip')) {
 
 if (!function_exists('log_admin')) {
   function log_admin(string $action, ?string $entity = null, ?int $entityId = null, $details = null): void {
-    // ✅ if db() is missing -> show error immediately
     if (!function_exists('db')) {
-      die("log_admin(): db() function not found. Add db() into config.php or include db.php before calling.");
+      error_log("log_admin(): db() function not found.");
+      return;
     }
 
-    $pdo = db();
+    try {
+      $pdo = db();
+    } catch (Throwable $e) {
+      error_log("log_admin(): db() failed: " . $e->getMessage());
+      return;
+    }
 
     $adminId = (int)($_SESSION['admin_id'] ?? 0);
     $adminName = (string)($_SESSION['admin_user'] ?? ($_SESSION['admin_name'] ?? 'Admin'));
@@ -337,7 +342,8 @@ if (!function_exists('log_admin')) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
-    $ok = $stmt->execute([
+    try {
+      $ok = $stmt->execute([
       $adminId ?: null,
       $adminName ?: null,
       $action,
@@ -346,11 +352,57 @@ if (!function_exists('log_admin')) {
       $details,
       client_ip(),
       substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255),
-    ]);
-
-    if (!$ok) {
-      $err = $stmt->errorInfo();
-      die("log_admin(): insert failed: " . print_r($err, true));
+      ]);
+      if (!$ok) {
+        $err = $stmt->errorInfo();
+        error_log("log_admin(): insert failed: " . print_r($err, true));
+      }
+    } catch (Throwable $e) {
+      error_log("log_admin(): exception: " . $e->getMessage());
     }
   }
 }
+
+if (!function_exists('log_admin_safe')) {
+  function log_admin_safe(string $action, ?string $entity = null, ?int $entityId = null, $details = null): void {
+    try { log_admin($action, $entity, $entityId, $details); } catch (Throwable $e) {}
+  }
+}
+
+if (!function_exists('bootstrap_admin_audit')) {
+  function bootstrap_admin_audit(): void {
+    static $booted = false;
+    if ($booted) return;
+    $booted = true;
+
+    if (PHP_SAPI === 'cli') return;
+    $uri = (string)($_SERVER['REQUEST_URI'] ?? '');
+    if (!str_contains($uri, '/admin/')) return;
+
+    $method = strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET'));
+    if (!in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'], true)) return;
+
+    $startedAt = microtime(true);
+    $path = parse_url($uri, PHP_URL_PATH) ?: $uri;
+    $entity = basename((string)$path);
+    $postKeys = array_keys($_POST ?? []);
+    $queryAction = (string)($_GET['action'] ?? '');
+
+    register_shutdown_function(function () use ($startedAt, $method, $path, $entity, $postKeys, $queryAction): void {
+      $status = http_response_code();
+      if ($status === false) $status = 200;
+      $durationMs = (int)round((microtime(true) - $startedAt) * 1000);
+
+      log_admin_safe('admin_request', $entity, null, [
+        'method' => $method,
+        'path' => $path,
+        'query_action' => $queryAction,
+        'post_keys' => $postKeys,
+        'status' => $status,
+        'duration_ms' => $durationMs,
+      ]);
+    });
+  }
+}
+
+bootstrap_admin_audit();
