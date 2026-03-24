@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../db.php'; // must define $pdo (PDO)
+security_headers(true);
+enforce_rate_limit('admin_api_camps', 600, 60, true);
 
 // Make sure session exists (sometimes config.php already starts it, but safe)
 if (session_status() !== PHP_SESSION_ACTIVE) { @session_start(); }
@@ -89,7 +91,7 @@ function upload_image(string $fieldName, string $subdir, array $allowedExt = ['j
   $dest = $dir . "/" . $fname;
   if (!move_uploaded_file($tmp, $dest)) fail("Upload failed", 500);
 
-  return "/youthagency/uploads/$subdir/" . $fname;
+  return "/uploads/$subdir/" . $fname;
 }
 
 function upload_many_images(string $fieldName, string $subdir): array {
@@ -117,7 +119,7 @@ function upload_many_images(string $fieldName, string $subdir): array {
     $dest = $dir . "/" . $fname;
 
     if (move_uploaded_file($tmps[$i], $dest)) {
-      $paths[] = "/youthagency/uploads/$subdir/" . $fname;
+      $paths[] = "/uploads/$subdir/" . $fname;
     }
   }
   return $paths;
@@ -484,8 +486,8 @@ try {
     $pdo->prepare("DELETE FROM camps_post_media WHERE id=?")->execute([$id]);
 
     $path = (string)$row['path'];
-    if (str_starts_with($path, "/youthagency/uploads/")) {
-      $abs = __DIR__ . "/../.." . str_replace("/youthagency", "", $path);
+    if (str_starts_with($path, "/uploads/")) {
+      $abs = __DIR__ . "/../.." . ltrim($path, "/");
       if (is_file($abs)) @unlink($abs);
     }
     ok();
