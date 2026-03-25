@@ -698,11 +698,19 @@
   }
 
   function observeDynamicFooter() {
-    const observer = new MutationObserver(() => {
+    // Avoid watching the full subtree forever (can cause heavy callback churn on dynamic pages).
+    // We only need to initialize once when footer exists, then disconnect.
+    if (document.querySelector('.site-footer')) {
       initFooterAccordion();
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+      if (!document.querySelector('.site-footer')) return;
+      initFooterAccordion();
+      observer.disconnect();
     });
     observer.observe(document.body, { childList: true, subtree: true });
-    initFooterAccordion();
   }
 
   // expose for injected header/footer usage
