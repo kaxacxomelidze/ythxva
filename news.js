@@ -4,11 +4,10 @@
 
   console.log('✅ news.js loaded');
 
-  const bust = Date.now();
-  const url = `data/news_api.php?v=${bust}`;
+  const url = 'data/news_api.php';
 
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { cache: 'default' });
     console.log('News API status:', res.status);
 
     const payload = res.ok ? await res.json() : { ok: false, news: [] };
@@ -27,7 +26,7 @@
 
       return `
         <article class="news-card">
-          ${n.image_path ? `<img class="news-img" src="${String(n.image_path).startsWith("/") ? escAttr(n.image_path) : "/" + escAttr(n.image_path)}" alt="">` : ``}
+          ${n.image_path ? `<img class="news-img" src="${String(n.image_path).startsWith("/") ? escAttr(n.image_path) : "/" + escAttr(n.image_path)}" alt="" loading="lazy" decoding="async">` : ``}
           <div class="news-body">
             <div class="news-title">${escHtml(n.title || '')}</div>
             ${n.published_at ? `<div class="news-date">${escHtml(n.published_at)}</div>` : ``}
