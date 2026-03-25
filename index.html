@@ -31,6 +31,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="assets.css?v=1">
   <link rel="stylesheet" href="slider.css?v=1">
+  <style>
+    .visually-hidden{
+      position:absolute !important;
+      width:1px !important;
+      height:1px !important;
+      padding:0 !important;
+      margin:-1px !important;
+      overflow:hidden !important;
+      clip:rect(0, 0, 0, 0) !important;
+      white-space:nowrap !important;
+      border:0 !important;
+    }
+  </style>
 
   <script type="application/ld+json">
     {
@@ -54,7 +67,8 @@
   <div id="siteHeaderMount"></div>
 
   <section class="hero">
-    <div class="slider" id="heroSlider" aria-label="Main slider" data-i18n-aria="home.sliderLabel">
+    <h2 class="visually-hidden" data-i18n="home.sliderLabel">მთავარი სლაიდერი</h2>
+    <div class="slider" id="heroSlider" role="region" aria-label="Main slider" data-i18n-aria="home.sliderLabel">
       <div class="slides" id="slidesTrack"></div>
 
       <button class="nav prev" type="button" id="prevBtn" aria-label="Previous slide" data-i18n-aria="home.prevSlide">
