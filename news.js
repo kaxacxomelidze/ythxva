@@ -26,7 +26,7 @@
 
       return `
         <article class="news-card">
-          ${n.image_path ? `<img class="news-img" src="${String(n.image_path).startsWith("/") ? escAttr(n.image_path) : "/" + escAttr(n.image_path)}" alt="" loading="eager" decoding="async" ${i === 0 ? 'fetchpriority="high"' : 'fetchpriority="auto"'}>` : ``}
+          ${n.image_path ? `<img class="news-img" src="${String(n.image_path).startsWith("/") ? escAttr(n.image_path) : "/" + escAttr(n.image_path)}" alt="" ${i < 2 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" fetchpriority="auto"'} decoding="async">` : ``}
           <div class="news-body">
             <div class="news-title">${escHtml(n.title || '')}</div>
             ${n.published_at ? `<div class="news-date">${escHtml(n.published_at)}</div>` : ``}

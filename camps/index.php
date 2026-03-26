@@ -423,7 +423,7 @@ $camps = $stmt->fetchAll(PDO::FETCH_ASSOC);
            data-status="<?=h($status)?>"
            data-search="<?=h($search)?>">
           <?php if ($cover !== ''): ?>
-            <img class="cimg" src="<?=h($cover)?>" alt="">
+            <img class="cimg" src="<?=h($cover)?>" alt="" loading="lazy" decoding="async">
           <?php else: ?>
             <div class="cimg placeholder"></div>
           <?php endif; ?>

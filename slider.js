@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function render() {
     track.innerHTML = slides.map((s, i) => `
       <div class="slide">
-        <img src="${img(s.image)}" alt="${s.title ? String(s.title).replace(/"/g, '&quot;') : ''}" loading="eager" ${i === 0 ? 'fetchpriority="high"' : 'fetchpriority="auto"'} decoding="async">
+        <img src="${img(s.image)}" alt="${s.title ? String(s.title).replace(/"/g, '&quot;') : ''}" ${i === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" fetchpriority="auto"'} decoding="async">
         <div class="slide-content">
           ${s.title ? `<h3>${s.title}</h3>` : ""}
         </div>

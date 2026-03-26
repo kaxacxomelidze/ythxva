@@ -98,7 +98,7 @@ $list = array_slice($items, 1, 4);
         <a class="mag-feature__link" href="<?=h($fUrl)?>">
           <div class="mag-feature__media">
             <?php if ($fImg): ?>
-              <img src="<?=h($fImg)?>" alt="<?=h($featured['title'])?>">
+              <img src="<?=h($fImg)?>" alt="<?=h($featured['title'])?>" loading="eager" fetchpriority="high" decoding="async">
             <?php else: ?>
               <div class="mag-fallback"></div>
             <?php endif; ?>
@@ -140,7 +140,7 @@ $list = array_slice($items, 1, 4);
               <a class="mag-mini__link" href="<?=h($url)?>">
                 <div class="mag-mini__thumb">
                   <?php if ($img): ?>
-                    <img src="<?=h($img)?>" alt="<?=h($n['title'])?>">
+                    <img src="<?=h($img)?>" alt="<?=h($n['title'])?>" loading="lazy" fetchpriority="auto" decoding="async">
                   <?php else: ?>
                     <div class="mag-mini__fallback"></div>
                   <?php endif; ?>
