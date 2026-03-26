@@ -41,7 +41,7 @@
       'footer.docsCopyright': 'საავტორო უფლებები',
       'footer.address': 'ვაჟა ფშაველას ქ. #76',
       'footer.phone': '032 230 51 65',
-      'footer.email': 'info@youth.ge',
+      'footer.email': 'info@sspm.ge',
       'footer.copySuffix': '© 2026. ყველა უფლება დაცულია.',
 
       'about.title': 'ჩვენ შესახებ',
@@ -60,7 +60,7 @@
       'contact.infoTitle': 'საკონტაქტო ინფორმაცია',
       'contact.address': 'ვაჟა ფშაველას ქ. #76',
       'contact.phoneInfo': '032 230 51 65',
-      'contact.emailInfo': 'info@youth.ge',
+      'contact.emailInfo': 'info@youthagency.gov.ge',
       'contact.mapTitle': 'მდებარეობა რუკაზე',
       'contact.mapNote': 'ოფისი შეგიძლიათ მარტივად ნახოთ რუკაზე და დაგეგმოთ ვიზიტი წინასწარ.',
 
@@ -189,7 +189,7 @@
       'footer.docsCopyright': 'Copyright',
       'footer.address': '76 Vazha-Pshavela St.',
       'footer.phone': '032 230 51 65',
-      'footer.email': 'info@youth.ge',
+      'footer.email': 'info@youthagency.gov.ge',
       'footer.copySuffix': '© 2026. All rights reserved.',
 
       'about.title': 'About Us',
@@ -208,7 +208,7 @@
       'contact.infoTitle': 'Contact information',
       'contact.address': '76 Vazha-Pshavela St.',
       'contact.phoneInfo': '032 230 51 65',
-      'contact.emailInfo': 'info@youth.ge',
+      'contact.emailInfo': 'info@youthagency.gov.ge',
       'contact.mapTitle': 'Find us on the map',
       'contact.mapNote': 'Use the map to locate our office and plan your visit in advance.',
 

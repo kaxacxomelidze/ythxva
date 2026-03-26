@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Youth Agency • Rules</title>
-  <meta name="description" content="Youth Agency-ის წესები, პირობები და მონაწილეობის ძირითადი მითითებები ერთ გვერდზე.">
+  <title>წესები და პირობები | სსიპ ახალგაზრდობის სააგენტო</title>
+  <meta name="description" content="სსიპ ახალგაზრდობის სააგენტოს წესები და პირობები: კონფიდენციალურობა, განაცხადის შევსება, ვადები და პლატფორმის გამოყენების პირობები.">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://sspm.ge/rules/">
   <link rel="icon" type="image/png" href="/imgs/youthagencyicon.png">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Youth Agency • Rules">
-  <meta property="og:description" content="იხილეთ Youth Agency-ის წესები, პირობები და მონაწილეობის მნიშვნელოვანი ინფორმაცია.">
+  <meta property="og:title" content="წესები და პირობები | სსიპ ახალგაზრდობის სააგენტო">
+  <meta property="og:description" content="იხილეთ სააგენტოს წესები: კონფიდენციალურობა, რეგისტრაცია, განაცხადების ვადები და პასუხისმგებლობა.">
   <meta property="og:url" content="https://sspm.ge/rules/">
   <meta property="og:image" content="https://sspm.ge/imgs/youthagencyicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -33,6 +33,10 @@
         <div>
           <h1>წესები და პირობები</h1>
           <p>მონაწილეობის, რეგისტრაციისა და უსაფრთხო კომუნიკაციის ძირითადი წესები ერთ სივრცეში.</p>
+          <p>
+            გვერდზე თავმოყრილია პლატფორმის გამოყენების მთავარი პირობები, რათა მომხმარებელმა მარტივად
+            გადაამოწმოს მოთხოვნები რეგისტრაციამდე ან განაცხადის გაგზავნამდე.
+          </p>
         </div>
       </div>
       <div class="rules">

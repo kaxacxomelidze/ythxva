@@ -6,6 +6,10 @@ RewriteEngine On
 RewriteBase /
 ErrorDocument 404 /404.php
 
+# Legacy prefix redirects (/youthagency/* -> /*)
+RewriteRule ^youthagency/?$ / [R=301,L,NE]
+RewriteRule ^youthagency/(.*)$ /$1 [R=301,L,NE]
+
 # 1) Do NOT rewrite real files or folders (css/js/images/php etc.)
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
