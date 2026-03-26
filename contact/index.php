@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="info-list">
             <div class="info-row"><span data-i18n="contact.address">ვაჟა ფშაველას ქ. #76</span></div>
             <div class="info-row"><span data-i18n="contact.phoneInfo">032 230 51 65</span></div>
-            <div class="info-row"><span data-i18n="contact.emailInfo">info@sspm.ge</span></div>
+            <div class="info-row"><span data-i18n="contact.emailInfo">info@youthagency.gov.ge</span></div>
           </div>
         </div>
         <div class="map-card">
