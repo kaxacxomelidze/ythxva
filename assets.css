@@ -20,6 +20,8 @@ body{
   background:#f2f2f2;
   line-height:1.5;
 }
+/* Defensive: legacy cached homepage promo block must never be visible */
+.home-seo{display:none !important;}
 img{
   max-width:100%;
   height:auto;
