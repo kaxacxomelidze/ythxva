@@ -538,6 +538,10 @@
   function initFooterAccordion() {
     const footer = document.querySelector('.site-footer');
     if (!footer || footer.dataset.accordionBound === 'true') return;
+    if (footer.dataset.staticFooter === 'true') {
+      footer.dataset.accordionBound = 'true';
+      return;
+    }
 
     const sections = Array.from(footer.querySelectorAll('[data-footer-section]'));
     if (!sections.length) return;

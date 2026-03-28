@@ -808,6 +808,17 @@ img{
       white-space:nowrap !important;
       border:0 !important;
     }
+    @media (max-width:640px){
+      .site-footer[data-static-footer="true"] .footer-section-body{
+        display:block !important;
+      }
+      .site-footer[data-static-footer="true"] .footer-section-toggle{
+        cursor:default;
+      }
+      .site-footer[data-static-footer="true"] .footer-section-arrow{
+        display:none !important;
+      }
+    }
   </style>
 
   <script type="application/ld+json">
@@ -917,7 +928,7 @@ img{
 
   <script src="news.js?v=1" defer></script>
 
-  <footer class="site-footer" data-nosnippet>
+  <footer class="site-footer" data-nosnippet data-static-footer="true">
   <div class="footer-wrap">
 
     <div class="footer-head">
