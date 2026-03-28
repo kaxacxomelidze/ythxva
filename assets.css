@@ -145,6 +145,9 @@ img{
 .header-nav .dropdown-menu a:hover{
   color:#000 !important;
 }
+.header-nav .dropdown-menu a.active{
+  color:#000 !important;
+}
 
 .header-nav a.active::after{
   content:"";
