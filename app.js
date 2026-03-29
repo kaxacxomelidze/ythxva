@@ -741,7 +741,7 @@
       mount.id = 'siteHeaderMount';
       document.body.prepend(mount);
       tasks.push(
-        fetchHtml('/header.html').then((html) => {
+        fetchHtml('/header.php').then((html) => {
           mount.innerHTML = html;
           initHeader();
         })
@@ -753,7 +753,7 @@
       mount.id = 'siteFooterMount';
       document.body.appendChild(mount);
       tasks.push(
-        fetchHtml('/footer.html').then((html) => {
+        fetchHtml('/footer.php').then((html) => {
           mount.innerHTML = html;
           initFooterAccordion();
         })

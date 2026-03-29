@@ -637,10 +637,10 @@ $canonicalUrl = 'https://sspm.ge/news/' . ($q !== '' ? '?q=' . rawurlencode($q) 
 
     (async () => {
       try {
-        await inject('siteHeaderMount', '/header.html');
+        await inject('siteHeaderMount', '/header.php');
         await loadScript('/app.js');
         if (typeof window.initHeader === 'function') window.initHeader();
-        await inject('siteFooterMount', '/footer.html');
+        await inject('siteFooterMount', '/footer.php');
       } catch (err) {
         console.error('HEADER/FOOTER ERROR:', err);
       }

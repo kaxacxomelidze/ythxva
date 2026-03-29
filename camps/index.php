@@ -556,9 +556,9 @@ $camps = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     (async () => {
       try {
-        const headerP = inject('siteHeaderMount', '/header.html');
+        const headerP = inject('siteHeaderMount', '/header.php');
         const appP = loadScript('/app.js');
-        const footerP = inject('siteFooterMount', '/footer.html');
+        const footerP = inject('siteFooterMount', '/footer.php');
         try{
           await Promise.all([headerP, appP]);
           if (typeof window.initHeader === 'function') window.initHeader();

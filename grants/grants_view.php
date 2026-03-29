@@ -794,12 +794,12 @@ $stepNames = array_values(array_unique($stepNames));
     }
 
     (async () => {
-      await inject('siteHeaderMount', '/header.html');
+      await inject('siteHeaderMount', '/header.php');
       try {
         await loadScript('/app.js');
         if (typeof window.initHeader === 'function') window.initHeader();
       } catch (e) {}
-      await inject('siteFooterMount', '/footer.html');
+      await inject('siteFooterMount', '/footer.php');
     })();
   </script>
 </body>

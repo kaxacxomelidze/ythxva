@@ -202,8 +202,8 @@ $canonicalUrl = 'https://sspm.ge/news/' . (int)$n['id'] . '/' . rawurlencode($sl
 
     (async () => {
       try {
-        const headerPromise = inject('siteHeaderMount', '/header.html');
-        const footerPromise = inject('siteFooterMount', '/footer.html');
+        const headerPromise = inject('siteHeaderMount', '/header.php');
+        const footerPromise = inject('siteFooterMount', '/footer.php');
         const appPromise = loadScript('/app.js');
 
         await Promise.all([headerPromise, appPromise]);

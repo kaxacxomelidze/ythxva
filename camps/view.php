@@ -949,10 +949,10 @@ $campEnd   = fmtDate((string)($camp['end_date'] ?? ''));
     }
 
     (async () => {
-      await inject('siteHeaderMount', '/header.html');
+      await inject('siteHeaderMount', '/header.php');
       await loadScript('/app.js');
       if (typeof window.initHeader === 'function') window.initHeader();
-      await inject('siteFooterMount', '/footer.html');
+      await inject('siteFooterMount', '/footer.php');
     })();
   </script>
 
