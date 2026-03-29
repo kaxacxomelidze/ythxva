@@ -893,15 +893,21 @@ img{
 }
 @media (max-width:640px){
   .slider{
-    height:calc(62vh - 64px);
-    min-height:320px;
+    height:auto;
+    min-height:0;
+  }
+  .slides,
+  .slide{
+    height:auto;
   }
   .slide img{
-    object-fit:contain;
-    background:#0b0f2a;
+    height:auto;
+    min-height:260px;
+    object-fit:cover;
+    background:transparent;
   }
   .slide::after{
-    background:linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.45));
+    background:linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.35));
   }
   .slide-link{
     padding:10px 16px;
