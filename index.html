@@ -896,8 +896,12 @@ img{
     height:calc(62vh - 64px);
     min-height:320px;
   }
+  .slide img{
+    object-fit:contain;
+    background:#0b0f2a;
+  }
   .slide::after{
-    background:linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.62));
+    background:linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.45));
   }
   .slide-link{
     padding:10px 16px;
