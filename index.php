@@ -75,6 +75,7 @@
   <?php require_once __DIR__ . '/footer.php'; ?>
 
   <script src="/app.js?v=2" defer></script>
+  <script>window.addEventListener("DOMContentLoaded",()=>{if(typeof window.initHeader==="function") window.initHeader(); if(typeof window.initFooterAccordion==="function") window.initFooterAccordion();},{once:true});</script>
   <script src="/news.js?v=2" defer></script>
   <script src="/slider.js?v=2" defer></script>
 </body>
