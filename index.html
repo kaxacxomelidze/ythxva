@@ -35,8 +35,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
-  <link rel="stylesheet" href="/assets.css?v=1">
-  <link rel="stylesheet" href="/slider.css?v=1">
+  <link rel="stylesheet" href="/assets.css?v=2">
+  <link rel="stylesheet" href="/slider.css?v=2">
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -113,10 +113,10 @@
     <div id="newsMount"></div>
   </main>
 
-  <script src="news.js?v=1" defer></script>
+  <script src="/news.js?v=2" defer></script>
   <div id="siteFooterMount"></div>
 
-  <script src="slider.js?v=1" defer></script>
+  <script src="/slider.js?v=2" defer></script>
 
   <script>
     async function inject(id, file) {
@@ -147,10 +147,10 @@
 
     (async () => {
       try {
-        const headerPromise = inject('siteHeaderMount', 'header.php');
-        const appScriptPromise = loadScript('app.js');
+        const headerPromise = inject('siteHeaderMount', '/header.php');
+        const appScriptPromise = loadScript('/app.js');
         const newsPromise = injectPhp('newsMount', '/news_list.php');
-        const footerPromise = inject('siteFooterMount', 'footer.php');
+        const footerPromise = inject('siteFooterMount', '/footer.php');
 
         await Promise.all([headerPromise, appScriptPromise]);
         if (typeof window.initHeader === 'function') window.initHeader();

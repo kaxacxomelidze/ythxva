@@ -177,7 +177,7 @@ $canonicalUrl = 'https://sspm.ge/news/' . ($q !== '' ? '?q=' . rawurlencode($q) 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <!-- Main CSS (your global styles) -->
-  <link rel="stylesheet" href="/assets.css?v=1">
+  <link rel="stylesheet" href="/assets.css?v=2">
 
 <style>
   :root{

@@ -140,7 +140,7 @@ $canonicalUrl = 'https://sspm.ge/news/' . (int)$n['id'] . '/' . rawurlencode($sl
   <meta property="og:image" content="<?=h($heroImageUrl)?>">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="stylesheet" href="/assets.css?v=1">
+  <link rel="stylesheet" href="/assets.css?v=2">
 
   <style>
     .wrap{max-width:1000px;margin:30px auto;padding:0 18px}
