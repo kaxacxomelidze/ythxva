@@ -379,6 +379,9 @@ $items = $st->fetchAll(PDO::FETCH_ASSOC);
         <a class="btn" href="<?=h($applyDefault)?>">
           <i class="fa-solid fa-file-pen"></i> <span data-i18n="grants.rulesCta">წესები და პირობები</span>
         </a>
+        <a class="btn" href="/sagranto-konkursebi/akhalgazrduli-iniciativebi/">
+          <i class="fa-solid fa-file-arrow-down"></i> <span>ახალგაზრდული ინიციატივები</span>
+        </a>
       </div>
     </section>
 

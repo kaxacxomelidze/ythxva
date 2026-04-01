@@ -76,7 +76,7 @@ if (!function_exists('rate_limit_exceeded')) {
   function rate_limit_exceeded(string $bucket, int $max = 120, int $windowSec = 60): bool {
     $ip = (string)($_SERVER['HTTP_CF_CONNECTING_IP'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown');
     $key = hash('sha256', $bucket . '|' . $ip);
-    $dir = sys_get_temp_dir() . '/sspm_rate_limits';
+    $dir = sys_get_temp_dir() . '/youthagency_rate_limits';
     if (!is_dir($dir)) @mkdir($dir, 0775, true);
     $file = $dir . '/' . $key . '.json';
 
@@ -234,10 +234,9 @@ if (!function_exists('db')) {
         PDO::ATTR_EMULATE_PREPARES   => false,
       ]);
     } catch (PDOException $e) {
-      if (str_contains($e->getMessage(), 'Unknown database')) {
-        exit("Database '".DB_NAME."' not found. Create it in phpMyAdmin.");
-      }
-      throw $e;
+      error_log('DB connection failed: ' . $e->getMessage());
+      http_response_code(503);
+      exit('Service temporarily unavailable. Please check database configuration.');
     }
 
     return $pdo;
