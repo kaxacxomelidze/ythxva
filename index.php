@@ -69,7 +69,7 @@
       </div>
     </section>
 
-    <div id="newsMount"></div>
+    <?php require __DIR__ . '/news_list.php'; ?>
   </main>
 
   <?php require_once __DIR__ . '/footer.php'; ?>
@@ -78,18 +78,5 @@
   <script>window.addEventListener("DOMContentLoaded",()=>{if(typeof window.initHeader==="function") window.initHeader(); if(typeof window.initFooterAccordion==="function") window.initFooterAccordion();},{once:true});</script>
   <script src="/news.js?v=2" defer></script>
   <script src="/slider.js?v=2" defer></script>
-  <script>
-    (async () => {
-      try {
-        const mount = document.getElementById('newsMount');
-        if (!mount) return;
-        const res = await fetch('/news_list.php?v=2', { cache: 'no-store' });
-        if (!res.ok) return;
-        mount.innerHTML = await res.text();
-      } catch (e) {
-        console.error(e);
-      }
-    })();
-  </script>
 </body>
 </html>

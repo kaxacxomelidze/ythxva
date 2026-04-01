@@ -54,9 +54,9 @@ if (!function_exists('env_or')) {
 }
 
 if (!defined('DB_HOST')) define('DB_HOST', env_or('DB_HOST', '127.0.0.1'));
-if (!defined('DB_NAME')) define('DB_NAME', env_or('DB_NAME', 'youthagency_hub'));
-if (!defined('DB_USER')) define('DB_USER', env_or('DB_USER', 'youthagency_lider'));
-if (!defined('DB_PASS')) define('DB_PASS', env_or('DB_PASS', 'eKH+TOt-@xZ?dbcI'));
+if (!defined('DB_NAME')) define('DB_NAME', env_or('DB_NAME', 'sspm_test'));
+if (!defined('DB_USER')) define('DB_USER', env_or('DB_USER', 'sspm_main'));
+if (!defined('DB_PASS')) define('DB_PASS', env_or('DB_PASS', 'themainfirst!@#$'));
 
 if (!function_exists('security_headers')) {
   function security_headers(bool $isJson = false): void {
